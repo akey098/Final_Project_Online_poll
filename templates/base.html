@@ -2,26 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Poll App</title>
+    <title>Online Poll</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <header>
-        <h1><a href="{{ url_for('index') }}">🗳️ Poll App</a></h1>
+        <h1>🗳️ Online Poll</h1>
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
             <a href="{{ url_for('create') }}">Create Poll</a>
         </nav>
         <hr>
     </header>
-
     <main>
         {% block content %}{% endblock %}
     </main>
-
     <footer>
         <hr>
-        <p>&copy; 2025 Poll App</p>
+        <p>&copy; 2025 Online Poll</p>
     </footer>
 </body>
 </html>

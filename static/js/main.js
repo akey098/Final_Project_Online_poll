@@ -1,44 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const pollForms = document.querySelectorAll("form.vote-form");
+function addOption() {
+    const container = document.getElementById('options');
+    const count = container.children.length + 1;
 
-    pollForms.forEach((form) => {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const pollId = form.dataset.pollId;
-            const formData = new FormData();
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `
+        <input type="text" name="options" placeholder="Option ${count}" required readonly onfocus="this.removeAttribute('readonly')">
+        <button type="button" class="delete-btn" onclick="removeOption(this)">✖️</button>
+    `;
 
-            const inputs = form.querySelectorAll("input[name='choice']");
-            inputs.forEach(input => {
-                if (input.checked) {
-                    formData.append("choice", input.value);
-                }
-            });
+    container.appendChild(div);
+    updatePlaceholders();
+}
 
-            try {
-                const response = await fetch(`/vote/${pollId}`, {
-                    method: "POST",
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    updateResults(pollId, data.results);
-                } else {
-                    alert("Failed to vote.");
-                }
-            } catch (err) {
-                console.error("Error:", err);
-            }
-        });
-    });
-
-    function updateResults(pollId, results) {
-        const resultsContainer = document.getElementById(`results-${pollId}`);
-        resultsContainer.innerHTML = "";
-        results.forEach(opt => {
-            const p = document.createElement("p");
-            p.innerHTML = `<strong>${opt.text}</strong>: ${opt.votes} votes`;
-            resultsContainer.appendChild(p);
-        });
+function removeOption(button) {
+    const option = button.closest('.option');
+    const options = document.querySelectorAll('.option');
+    if (options.length > 2) {
+        option.remove();
+        updatePlaceholders();
+    } else {
+        alert('At least two options are required.');
     }
-});
+}
+
+function updatePlaceholders() {
+    const inputs = document.querySelectorAll('#options input[type="text"]');
+    inputs.forEach((input, i) => {
+        input.placeholder = `Option ${i + 1}`;
+    });
+}

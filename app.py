@@ -9,7 +9,6 @@ app.config['SECRET_KEY'] = 'poll_secret_key'
 
 db = SQLAlchemy(app)
 
-# Models
 class Poll(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(200), nullable=False)
@@ -57,6 +56,18 @@ def vote(poll_id):
         if option:
             option.votes += 1
 
+    db.session.commit()
+    return redirect(url_for('poll_results', poll_id=poll.id))
+
+@app.route('/results/<int:poll_id>')
+def poll_results(poll_id):
+    poll = Poll.query.get_or_404(poll_id)
+    return render_template('results.html', poll=poll)
+
+@app.route('/delete/<int:poll_id>', methods=['POST'])
+def delete_poll(poll_id):
+    poll = Poll.query.get_or_404(poll_id)
+    db.session.delete(poll)
     db.session.commit()
     return redirect(url_for('index'))
 

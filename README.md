@@ -16,3 +16,4 @@ A simple web-based polling application built with Flask and SQLite.
 
 ```bash
 pip install -r requirements.txt
+ 

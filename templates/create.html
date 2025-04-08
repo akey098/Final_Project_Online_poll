@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h2>Create a New Poll</h2>
-<form method="POST" action="{{ url_for('create') }}">
-    <label for="question">Question:</label><br>
-    <input type="text" id="question" name="question" required><br><br>
+<h2>Create a Poll</h2>
+<form method="POST">
+    <label>Question:</label><br>
+    <input type="text" name="question" required><br><br>
 
-    <label for="option1">Option 1:</label><br>
-    <input type="text" id="option1" name="option1" required><br><br>
+    <label>Options:</label><br>
+    <div id="options">
+        <input type="text" name="options" placeholder="Option 1" required><br>
+        <input type="text" name="options" placeholder="Option 2" required><br>
+    </div>
+    <button type="button" onclick="addOption()">Add Option</button><br><br>
 
-    <label for="option2">Option 2:</label><br>
-    <input type="text" id="option2" name="option2" required><br><br>
+    <input type="checkbox" name="is_multiple_choice" id="is_multiple_choice">
+    <label for="is_multiple_choice">Allow multiple selections</label><br><br>
 
     <button type="submit">Create Poll</button>
 </form>
+
+<script>
+function addOption() {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'options';
+    input.required = true;
+    input.placeholder = 'Another option';
+    document.getElementById('options').appendChild(input);
+    document.getElementById('options').appendChild(document.createElement('br'));
+}
+</script>
 {% endblock %}

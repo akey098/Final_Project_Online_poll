@@ -1,26 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Add class to highlight selected radio buttons
-    const pollForms = document.querySelectorAll("form");
+    const pollForms = document.querySelectorAll("form.vote-form");
 
     pollForms.forEach((form) => {
-        const radios = form.querySelectorAll("input[type='radio']");
-        radios.forEach((radio) => {
-            radio.addEventListener("change", () => {
-                radios.forEach(r => r.parentElement.classList.remove("selected"));
-                if (radio.checked) {
-                    radio.parentElement.classList.add("selected");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const pollId = form.dataset.pollId;
+            const formData = new FormData();
+
+            const inputs = form.querySelectorAll("input[name='choice']");
+            inputs.forEach(input => {
+                if (input.checked) {
+                    formData.append("choice", input.value);
                 }
             });
+
+            try {
+                const response = await fetch(`/vote/${pollId}`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateResults(pollId, data.results);
+                } else {
+                    alert("Failed to vote.");
+                }
+            } catch (err) {
+                console.error("Error:", err);
+            }
         });
     });
 
-    // Fade in results after a short delay
-    const results = document.querySelectorAll(".results");
-    results.forEach((section) => {
-        section.style.opacity = 0;
-        setTimeout(() => {
-            section.style.transition = "opacity 1s ease-in";
-            section.style.opacity = 1;
-        }, 300);
-    });
+    function updateResults(pollId, results) {
+        const resultsContainer = document.getElementById(`results-${pollId}`);
+        resultsContainer.innerHTML = "";
+        results.forEach(opt => {
+            const p = document.createElement("p");
+            p.innerHTML = `<strong>${opt.text}</strong>: ${opt.votes} votes`;
+            resultsContainer.appendChild(p);
+        });
+    }
 });

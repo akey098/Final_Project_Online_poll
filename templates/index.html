@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Available Polls</h2>
+
+{% if polls %}
+    {% for poll in polls %}
+        <div class="poll">
+            <h3>{{ poll.question }}</h3>
+            <form method="POST" action="{{ url_for('vote', poll_id=poll.id) }}">
+                <input type="radio" id="option1_{{ poll.id }}" name="choice" value="option1" required>
+                <label for="option1_{{ poll.id }}">{{ poll.option1 }}</label><br>
+
+                <input type="radio" id="option2_{{ poll.id }}" name="choice" value="option2" required>
+                <label for="option2_{{ poll.id }}">{{ poll.option2 }}</label><br><br>
+
+                <button type="submit">Vote</button>
+            </form>
+
+            <div class="results">
+                <p><strong>{{ poll.option1 }}</strong>: {{ poll.votes1 }} votes</p>
+                <p><strong>{{ poll.option2 }}</strong>: {{ poll.votes2 }} votes</p>
+            </div>
+            <hr>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No polls available yet. <a href="{{ url_for('create') }}">Create one now</a>!</p>
+{% endif %}
+{% endblock %}

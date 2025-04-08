@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create a New Poll</h2>
+<form method="POST" action="{{ url_for('create') }}">
+    <label for="question">Question:</label><br>
+    <input type="text" id="question" name="question" required><br><br>
+
+    <label for="option1">Option 1:</label><br>
+    <input type="text" id="option1" name="option1" required><br><br>
+
+    <label for="option2">Option 2:</label><br>
+    <input type="text" id="option2" name="option2" required><br><br>
+
+    <button type="submit">Create Poll</button>
+</form>
+{% endblock %}

@@ -12,14 +12,53 @@
             <a href="{{ url_for('index') }}">Home</a> |
             <a href="{{ url_for('create') }}">Create Poll</a>
         </nav>
-        <hr>
     </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+
+    <div class="layout">
+        <main>
+            {% for poll in polls %}
+    <div class="poll">
+        <h3>{{ poll.question }}</h3>
+        <form method="POST" action="{{ url_for('vote', poll_id=poll.id) }}">
+            <div class="poll-options">
+                {% for option in poll.options %}
+                    <label>
+                        {% if poll.is_multiple_choice %}
+                            <input type="checkbox" name="choice" value="{{ option.id }}">
+                        {% else %}
+                            <input type="radio" name="choice" value="{{ option.id }}" required>
+                        {% endif %}
+                        {{ option.text }}
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit">Vote</button>
+        </form>
+
+        <div class="poll-links">
+            <a href="{{ url_for('poll_results', poll_id=poll.id) }}">View Results</a>
+
+        </div>
+    </div>
+{% endfor %}
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <aside class="side-panel">
+            <h3>📊 Poll Stats</h3>
+            {% set total_polls = total_polls if total_polls is defined else namespace(count=0) %}
+            {% set total_votes = total_votes if total_votes is defined else namespace(count=0) %}
+            <p><strong>Total Polls:</strong> {{ total_polls.count if total_polls is mapping or total_polls is sequence else total_polls }}</p>
+            <p><strong>Total Votes:</strong> {{ total_votes.count if total_votes is mapping or total_votes is sequence else total_votes }}</p>
+        </aside>
+    </div>
+
     <footer>
-        <hr>
         <p>&copy; 2025 Online Poll</p>
     </footer>
+
+    <div id="firework-container"></div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Available Polls</h2>
-<p><a href="{{ url_for('create') }}">Create a New Poll</a></p>
-<hr>
 {% for poll in polls %}
     <div class="poll">
         <h3>{{ poll.question }}</h3>
         <form method="POST" action="{{ url_for('vote', poll_id=poll.id) }}">
-            {% for option in poll.options %}
-                {% if poll.is_multiple_choice %}
-                    <input type="checkbox" name="choice" value="{{ option.id }}">
-                {% else %}
-                    <input type="radio" name="choice" value="{{ option.id }}" required>
-                {% endif %}
-                {{ option.text }}<br>
-            {% endfor %}
+            <div class="poll-options">
+                {% for option in poll.options %}
+                    <label>
+                        {% if poll.is_multiple_choice %}
+                            <input type="checkbox" name="choice" value="{{ option.id }}">
+                        {% else %}
+                            <input type="radio" name="choice" value="{{ option.id }}" required>
+                        {% endif %}
+                        {{ option.text }}
+                    </label>
+                {% endfor %}
+            </div>
             <button type="submit">Vote</button>
         </form>
-        <form method="POST" action="{{ url_for('delete_poll', poll_id=poll.id) }}" onsubmit="return confirm('Are you sure you want to delete this poll?');">
-            <button type="submit" class="danger delete-btn">✖️ Delete Poll</button>
-        </form>
-        <hr>
+
+        <div class="poll-links">
+            <a href="{{ url_for('poll_results', poll_id=poll.id) }}">View Results</a>
+
+            <!-- Delete button (POST form) -->
+            <form method="POST" action="{{ url_for('delete_poll', poll_id=poll.id) }}" style="display:inline;">
+                <button type="submit" class="delete-btn">❌</button>
+            </form>
+        </div>
     </div>
 {% endfor %}
 {% endblock %}

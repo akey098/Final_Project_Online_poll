@@ -10,6 +10,7 @@ Web-based polling application built with Flask and SQLite.
 - View results as visual bars
 - View statistics
 - Enjoy a firework visual effect
+- Choose the light or the dark theme
 
 ## Setup
 

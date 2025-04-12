@@ -12,6 +12,27 @@ function addOption() {
     container.appendChild(div);
     updatePlaceholders();
 }
+function applyTheme(theme) {
+    document.body.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const current = document.body.classList.contains('dark') ? 'dark' : 'light';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+    }
+
+    if (window.location.pathname.startsWith('/results/')) {
+        setTimeout(launchFireworksBurst, 400);
+    }
+});
 
 function removeOption(button) {
     const option = button.closest('.option');

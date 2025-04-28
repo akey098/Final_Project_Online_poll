@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+
+{# Override sidebar to empty—this removes the Poll Stats panel #}
+{% block sidebar %}{% endblock %}
+
 {% block content %}
 <h2>Results: {{ poll.question }}</h2>
 
@@ -6,7 +10,7 @@
     {% set total_votes = poll.options | map(attribute='votes') | sum %}
     {% for option in poll.options %}
         {% set percent = (option.votes / total_votes * 100) if total_votes > 0 else 0 %}
-        <div class="result-row {% if request.args.getlist('voted') and option.id|string in request.args.getlist('voted') %}highlighted-option{% endif %}">
+        <div class="result-row {% if request.args.getlist('voted') and (option.id|string) in request.args.getlist('voted') %}highlighted-option{% endif %}">
             <div class="label">
                 {{ option.text }}
                 <span class="percent">{{ '%.0f' % percent }}%</span>

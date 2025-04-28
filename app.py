@@ -1,3 +1,4 @@
+# app.py
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -12,7 +13,10 @@ class Poll(db.Model):
     question = db.Column(db.String(200), nullable=False)
     is_multiple_choice = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    options = db.relationship('Option', backref='poll', lazy=True, cascade='all, delete-orphan')
+    options = db.relationship(
+        'Option', backref='poll', lazy=True,
+        cascade='all, delete-orphan'
+    )
 
 class Option(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +29,12 @@ def index():
     polls = Poll.query.order_by(Poll.created_at.desc()).all()
     total_votes = sum(opt.votes for opt in Option.query.all())
     total_polls = Poll.query.count()
-    return render_template('base.html', polls=polls, total_votes=total_votes, total_polls=total_polls)
+    return render_template(
+        'base.html',
+        polls=polls,
+        total_votes=total_votes,
+        total_polls=total_polls
+    )
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
@@ -34,7 +43,10 @@ def create():
         is_multiple_choice = 'is_multiple_choice' in request.form
         option_texts = request.form.getlist('options')
         if question and len(option_texts) >= 2:
-            poll = Poll(question=question, is_multiple_choice=is_multiple_choice)
+            poll = Poll(
+                question=question,
+                is_multiple_choice=is_multiple_choice
+            )
             db.session.add(poll)
             db.session.flush()
             for text in option_texts:
@@ -44,18 +56,27 @@ def create():
 
     total_votes = sum(opt.votes for opt in Option.query.all())
     total_polls = Poll.query.count()
-    return render_template('create.html', total_votes=total_votes, total_polls=total_polls)
+    return render_template(
+        'create.html',
+        total_votes=total_votes,
+        total_polls=total_polls
+    )
 
 @app.route('/vote/<int:poll_id>', methods=['POST'])
 def vote(poll_id):
     poll = Poll.query.get_or_404(poll_id)
     selected_option_ids = request.form.getlist('choice')
     for option_id in selected_option_ids:
-        option = Option.query.filter_by(id=option_id, poll_id=poll.id).first()
+        option = Option.query.filter_by(
+            id=option_id, poll_id=poll.id
+        ).first()
         if option:
             option.votes += 1
     db.session.commit()
-    return redirect(url_for('poll_results', poll_id=poll.id, voted=selected_option_ids))
+    return redirect(
+        url_for('poll_results', poll_id=poll.id,
+                voted=selected_option_ids)
+    )
 
 @app.route('/results/<int:poll_id>')
 def poll_results(poll_id):
@@ -68,6 +89,14 @@ def poll_results(poll_id):
         total_votes=total_votes,
         total_polls=total_polls
     )
+
+# NEW: delete route
+@app.route('/delete/<int:poll_id>', methods=['POST'])
+def delete_poll(poll_id):
+    poll = Poll.query.get_or_404(poll_id)
+    db.session.delete(poll)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     with app.app_context():

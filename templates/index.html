@@ -1,32 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for poll in polls %}
-    <div class="poll">
-        <h3>{{ poll.question }}</h3>
-        <form method="POST" action="{{ url_for('vote', poll_id=poll.id) }}">
-            <div class="poll-options">
-                {% for option in poll.options %}
-                    <label>
-                        {% if poll.is_multiple_choice %}
-                            <input type="checkbox" name="choice" value="{{ option.id }}">
-                        {% else %}
-                            <input type="radio" name="choice" value="{{ option.id }}" required>
-                        {% endif %}
-                        {{ option.text }}
-                    </label>
-                {% endfor %}
-            </div>
-            <button type="submit">Vote</button>
-        </form>
+<h2>Available Polls</h2>
 
-        <div class="poll-links">
+{% if polls %}
+    {% for poll in polls %}
+        <div class="poll">
+            <h3>{{ poll.question }}</h3>
+
+            <form method="POST" action="{{ url_for('vote', poll_id=poll.id) }}">
+                <div class="poll-options">
+                    {% for option in poll.options %}
+                        <label>
+                            {% if poll.is_multiple_choice %}
+                                <input type="checkbox" name="choice" value="{{ option.id }}">
+                            {% else %}
+                                <input type="radio" name="choice" value="{{ option.id }}" required>
+                            {% endif %}
+                            {{ option.text }}
+                        </label>
+                    {% endfor %}
+                </div>
+                <button type="submit">Vote</button>
+            </form>
+
             <a href="{{ url_for('poll_results', poll_id=poll.id) }}">View Results</a>
 
-            <!-- Delete button (POST form) -->
-            <form method="POST" action="{{ url_for('delete_poll', poll_id=poll.id) }}" style="display:inline;">
-                <button type="submit" class="delete-btn">❌</button>
-            </form>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+{% else %}
+    <p style="margin-top: 30px; font-size: 1.1rem; color: #666;">
+        <em>No polls created yet. Let’s <a href="{{ url_for('create') }}">make one</a>!</em>
+    </p>
+{% endif %}
 {% endblock %}

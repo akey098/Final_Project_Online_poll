@@ -175,6 +175,16 @@ button:hover {
     background-color: var(--button-hover);
 }
 
+/* Delete Poll Button */
+.delete-poll-btn {
+    background-color: #e74c3c;
+    margin-left: 8px;
+}
+
+.delete-poll-btn:hover {
+    background-color: #c0392b;
+}
+
 /* Results */
 .result-container {
     margin-top: 20px;

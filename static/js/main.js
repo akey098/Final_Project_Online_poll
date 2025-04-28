@@ -12,12 +12,14 @@ function addOption() {
     container.appendChild(div);
     updatePlaceholders();
 }
+
 function applyTheme(theme) {
     document.body.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('theme', theme);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Theme initialization
     const saved = localStorage.getItem('theme') || 'light';
     applyTheme(saved);
 
@@ -29,11 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (window.location.pathname.startsWith('/results/')) {
+    // Only launch fireworks on /results/ when there's a `voted` param
+    const params = new URLSearchParams(window.location.search);
+    if (
+        window.location.pathname.startsWith('/results/') &&
+        params.has('voted')
+    ) {
         setTimeout(launchFireworksBurst, 400);
     }
 });
 
+// Remove an option field
 function removeOption(button) {
     const option = button.closest('.option');
     const options = document.querySelectorAll('.option');
@@ -94,9 +102,3 @@ function launchFireworksBurst() {
         launchFireworks(centerX + offset.x, centerY + offset.y);
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.startsWith('/results/')) {
-        setTimeout(launchFireworksBurst, 400);
-    }
-});

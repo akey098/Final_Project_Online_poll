@@ -51,13 +51,12 @@
                         View Results
                     </a>
                     <form method="POST"
-                          action="{{ url_for('delete_poll',
-                                             poll_id=poll.id) }}"
+                          action="{{ url_for('delete_poll',poll_id=poll.id) }}"
                           style="display:inline">
                         <button type="submit"
                                 class="delete-poll-btn"
                                 onclick="return confirm('Delete this poll?');">
-                            Delete
+                            Delete Poll
                         </button>
                     </form>
                 </div>

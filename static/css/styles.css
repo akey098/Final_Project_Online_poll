@@ -11,6 +11,9 @@
     --button-bg: #007bff;
     --button-hover: #0056b3;
     --form-bg: #f7f7f7;
+        /* Delete Poll button colors */
+    --delete-button-bg: #e74c3c;
+    --delete-button-hover: #c0392b;
 }
 
 body.dark {
@@ -26,6 +29,9 @@ body.dark {
     --button-bg: #375a7f;
     --button-hover: #2b4766;
     --form-bg: #292c34;
+    /* Dark-mode Delete Poll button */
+    --delete-button-bg: #c0392b;
+    --delete-button-hover: #922b21;
 }
 
 /* Reset & base */
@@ -177,13 +183,14 @@ button:hover {
 
 /* Delete Poll Button */
 .delete-poll-btn {
-    background-color: #e74c3c;
+    background-color: var(--delete-button-bg);
     margin-left: 8px;
 }
 
 .delete-poll-btn:hover {
-    background-color: #c0392b;
+    background-color: var(--delete-button-hover);
 }
+
 
 /* Results */
 .result-container {

@@ -13,7 +13,14 @@
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
             <a href="{{ url_for('create') }}">Create Poll</a>
-            <button id="theme-toggle">🌓 Toggle Theme</button>
+            <!-- Theme switch -->
+            <div class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <label for="theme-toggle">
+                    <span class="sun">☀️</span>
+                    <span class="moon">🌙</span>
+                </label>
+            </div>
         </nav>
     </header>
 

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="form-box">
     <h2>Create a Poll</h2>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('polls.create') }}">
         <label>Question:</label>
         <input type="text" name="question" required>
 
@@ -13,36 +13,18 @@
 
         <div id="options">
             <div class="option">
-                <input type="text"
-                       name="options"
-                       placeholder="Option 1"
-                       required
-                       readonly
-                       onfocus="this.removeAttribute('readonly')">
-                <button type="button"
-                        class="delete-btn"
-                        onclick="removeOption(this)">✖️</button>
+                <input type="text" name="options" placeholder="Option 1" required readonly onfocus="this.removeAttribute('readonly')">
+                <button type="button" class="delete-btn" onclick="removeOption(this)">✖️</button>
             </div>
             <div class="option">
-                <input type="text"
-                       name="options"
-                       placeholder="Option 2"
-                       required
-                       readonly
-                       onfocus="this.removeAttribute('readonly')">
-                <button type="button"
-                        class="delete-btn"
-                        onclick="removeOption(this)">✖️</button>
+                <input type="text" name="options" placeholder="Option 2" required readonly onfocus="this.removeAttribute('readonly')">
+                <button type="button" class="delete-btn" onclick="removeOption(this)">✖️</button>
             </div>
         </div>
 
         <div class="checkbox-row">
-            <input type="checkbox"
-                   name="is_multiple_choice"
-                   id="is_multiple_choice">
-            <label for="is_multiple_choice">
-                Allow multiple selections
-            </label>
+            <input type="checkbox" name="is_multiple_choice" id="is_multiple_choice">
+            <label for="is_multiple_choice">Allow multiple selections</label>
         </div>
 
         <button type="submit">Create</button>

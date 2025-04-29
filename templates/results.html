@@ -1,27 +1,22 @@
 {% extends 'base.html' %}
-
-{# Override sidebar to empty—this removes the Poll Stats panel #}
-{% block sidebar %}{% endblock %}
-
 {% block content %}
 <h2>Results: {{ poll.question }}</h2>
 
 <div class="result-container">
     {% set total_votes = poll.options | map(attribute='votes') | sum %}
-    {% for option in poll.options %}
-        {% set percent = (option.votes / total_votes * 100) if total_votes > 0 else 0 %}
-        <div class="result-row {% if request.args.getlist('voted') and (option.id|string) in request.args.getlist('voted') %}highlighted-option{% endif %}">
-            <div class="label">
-                {{ option.text }}
-                <span class="percent">{{ '%.0f' % percent }}%</span>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar" style="width:{{ percent }}%"></div>
-            </div>
-            <div class="votes">{{ option.votes }} vote{{ 's' if option.votes != 1 else '' }}</div>
+    {% for opt in poll.options %}
+    {% set pct = (opt.votes / total_votes * 100) if total_votes > 0 else 0 %}
+    <div class="result-row {% if request.args.getlist('voted') and (opt.id|string) in request.args.getlist('voted') %}highlighted-option{% endif %}">
+        <div class="label">
+            {{ opt.text }} <span class="percent">{{ '%.0f' % pct }}%</span>
         </div>
+        <div class="bar-wrap">
+            <div class="bar" style="width:{{ pct }}%"></div>
+        </div>
+        <div class="votes">{{ opt.votes }} vote{{ 's' if opt.votes != 1 else '' }}</div>
+    </div>
     {% endfor %}
 </div>
 
-<p><a href="{{ url_for('index') }}">← Back to Polls</a></p>
+<p><a href="{{ url_for('polls.index') }}">← Back to Polls</a></p>
 {% endblock %}

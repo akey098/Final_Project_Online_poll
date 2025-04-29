@@ -8,6 +8,7 @@ Web-based polling application built with Flask and SQLite.
 - Allow single or multiple answers
 - Vote on polls
 - View results as visual bars
+- Delete polls if needed
 - View statistics
 - Enjoy a firework visual effect
 - Choose the light or the dark theme

@@ -13,7 +13,6 @@
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
             <a href="{{ url_for('create') }}">Create Poll</a>
-            <!-- Theme switch -->
             <div class="theme-switch">
                 <input type="checkbox" id="theme-toggle">
                 <label for="theme-toggle">
@@ -26,54 +25,60 @@
 
     <div class="layout">
         <main>
-            {% for poll in polls %}
-            <div class="poll">
-                <h3>{{ poll.question }}</h3>
-
-                <form method="POST"
-                      action="{{ url_for('vote', poll_id=poll.id) }}">
-                    <div class="poll-options">
-                        {% for option in poll.options %}
-                            <label>
-                                {% if poll.is_multiple_choice %}
-                                    <input type="checkbox"
-                                           name="choice"
-                                           value="{{ option.id }}">
-                                {% else %}
-                                    <input type="radio"
-                                           name="choice"
-                                           value="{{ option.id }}"
-                                           required>
-                                {% endif %}
-                                {{ option.text }}
-                            </label>
-                        {% endfor %}
+            {# Only show polls (or the empty message) on the index endpoint #}
+            {% if request.endpoint == 'index' %}
+                {% if polls %}
+                    {% for poll in polls %}
+                    <div class="poll">
+                        <h3>{{ poll.question }}</h3>
+                        <form method="POST"
+                              action="{{ url_for('vote', poll_id=poll.id) }}">
+                            <div class="poll-options">
+                                {% for option in poll.options %}
+                                    <label>
+                                        {% if poll.is_multiple_choice %}
+                                            <input type="checkbox"
+                                                   name="choice"
+                                                   value="{{ option.id }}">
+                                        {% else %}
+                                            <input type="radio"
+                                                   name="choice"
+                                                   value="{{ option.id }}"
+                                                   required>
+                                        {% endif %}
+                                        {{ option.text }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <button type="submit">Vote</button>
+                        </form>
+                        <div class="poll-links">
+                            <a href="{{ url_for('poll_results', poll_id=poll.id) }}">
+                                View Results
+                            </a>
+                            <form method="POST"
+                                  action="{{ url_for('delete_poll', poll_id=poll.id) }}"
+                                  style="display:inline">
+                                <button type="submit"
+                                        class="delete-poll-btn"
+                                        onclick="return confirm('Delete this poll?');">
+                                    Delete Poll
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <button type="submit">Vote</button>
-                </form>
-
-                <div class="poll-links">
-                    <a href="{{ url_for('poll_results',
-                                        poll_id=poll.id) }}">
-                        View Results
-                    </a>
-                    <form method="POST"
-                          action="{{ url_for('delete_poll',poll_id=poll.id) }}"
-                          style="display:inline">
-                        <button type="submit"
-                                class="delete-poll-btn"
-                                onclick="return confirm('Delete this poll?');">
-                            Delete Poll
-                        </button>
-                    </form>
-                </div>
-            </div>
-            {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-message">
+                        There are no polls yet.
+                        <a href="{{ url_for('create') }}">Create Poll</a>
+                    </p>
+                {% endif %}
+            {% endif %}
 
             {% block content %}{% endblock %}
         </main>
 
-        {# Only show the stats sidebar if we're not on the results view #}
         {% if request.endpoint != 'poll_results' %}
         <aside class="side-panel">
             <h3>📊 Poll Stats</h3>
@@ -88,7 +93,6 @@
     </footer>
 
     <div id="firework-container"></div>
-    <script
-      src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
